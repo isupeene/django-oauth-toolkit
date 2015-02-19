@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 import logging
 
 from django.core.exceptions import ImproperlyConfigured
-from django.http import HttpResponseForbidden
 
 from ..oauth2_backends import OAuthLibCore
 from ..exceptions import FatalClientError
 from ..settings import oauth2_settings
+from ..http import redirect_or_403
 
 
 log = logging.getLogger("oauth2_provider")
@@ -200,7 +200,7 @@ class ProtectedResourceMixin(OAuthLibMixin):
             request.resource_owner = r.user
             return super(ProtectedResourceMixin, self).dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden()
+            return redirect_or_403()
 
 
 class ReadWriteScopedResourceMixin(ScopedResourceMixin, OAuthLibMixin):
